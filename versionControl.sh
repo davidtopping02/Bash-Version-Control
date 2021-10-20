@@ -1,36 +1,42 @@
 #! /bin/bash
 
+export exit=0
+
 function menuPrompt
 {
-	echo '0. Exit'
+	echo $'\n0. Exit'
 	echo '1. Create new repository'
 	echo '2. Check file into respository'
 	echo $'3. Check file out\n'
 	read -p "Please enter your choice: " userChoice
 
 	case $userChoice in
-		1 ) echo "Creating new repository..."
+		1 ) echo
 		    ;;
-		2 ) echo "Checking file into to the repository..."
-        checkIn
+		2 ) checkIn
 				;;
-		3 ) echo "Checking out file for editing..."
-        checkOut
+		3 ) checkOut
 				;;
-		0 ) echo ""
-		echo "Thank you for using the program."
-		echo ""
-		;;
-		* ) echo "That is not a valid choice. Please try again."
+		0 )
+				exit=1
+				echo $'\nThank you for using the program.\n'
+				exit 1
+				;;
+		* ) echo 'That is not a valid choice. Please try again.'
 		menuPrompt
 		;;
 	esac
 }
 
 checkIn(){
+	#checking if there are any files to be chcked in
+	if [ -z "$(ls -A workingDir)" ]; then
+		echo $'There are currently no files checked out...'
+		menuPrompt
+	fi
 
   #displaying all available respositories
-  echo "Which repository would you like to check a file into:"
+  echo $'\nWhich repository would you like to check a file into:'
   ls workingDir
 
   #getting user option of repository
@@ -88,7 +94,7 @@ checkIn(){
 checkOut(){
 
   #displaying all available respositories
-  echo 'Respositories available:'
+  echo $'\nRespositories available:'
   ls repositories
 
   #getting user option of repository
@@ -124,7 +130,6 @@ checkOut(){
     fi
   done
 
-
   #moving file to be checked out to working directory
   if [[ ! -d workingDir/$repo ]]; then
       mkdir workingDir/$repo
@@ -134,10 +139,28 @@ checkOut(){
   #displaying message if move of directory worked
   if [[ -f "workingDir/$repo/$fileToCheckOut"  ]]; then
     echo 'File checked out succesfully!'
+
+		echo $'\nWould you like to open your file in a text editor?'
+		echo 'y/n'
+		read -p 'Option: ' userChoice
+
+		case $userChoice in
+			y )
+					gnome-text-editor workingDir/$repo/$fileToCheckOut
+			    ;;
+			n ) menuPrompt
+					;;
+			* ) echo 'That is not a valid choice.'
+					menuPrompt
+					;;
+			esac
   else
     echo "Error in checking out file '$fileToCheckOut'"
   fi
 
 }
 
-menuPrompt
+#looping the menu till exit
+while [[ $exit != 1 ]]; do
+	menuPrompt exit
+done
