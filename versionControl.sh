@@ -21,10 +21,8 @@ checkIn(){
     fi
   done
 
-
-
   #displaying all files that can be checked in
-  echo $'\nfiles available to check in'
+  echo $'\nfiles available to be check in'
   ls workingDir/$repo
 
   #init file to check in variable
@@ -46,8 +44,9 @@ checkIn(){
   mv workingDir/$repo/$fileToCheckIn repositories/$repo
 
   #deleting folder if its the last file being checked in
-
-
+  if [ -z "$(ls -A workingDir/$repo)" ]; then
+    rm -r workingDir/$repo
+  fi
 
   #displaying message if move of directory worked
   if [[ -f "repositories/$repo/$fileToCheckIn"  ]]; then
@@ -80,20 +79,20 @@ checkOut(){
     fi
   done
 
-  fileTo="fileTo"
+  fileToCheckOut="fileToCheckOut"
 
   #displaying all files that can be checked out
   echo $'\nfiles available to check out'
   ls repositories/$repo
 
   #looping till valid file is enterered
-  until [[ -f "repositories/$repo/$fileTo" ]]; do
+  until [[ -f "repositories/$repo/$fileToCheckOut" ]]; do
 
     #getting user option of file to be
-    read -p $'\nfile to : ' fileTo
+    read -p $'\nfile to check out: ' fileToCheckOut
 
     #displaying message if the file entered does not exist
-    if [[ ! -f "repositories/$repo/$fileTo"  ]]; then
+    if [[ ! -f "repositories/$repo/$fileToCheckOut"  ]]; then
       echo 'file does not exist'
     fi
   done
@@ -103,15 +102,13 @@ checkOut(){
   if [[ ! -d workingDir/$repo ]]; then
       mkdir workingDir/$repo
   fi
-  mv repositories/$repo/$fileTo workingDir/$repo
+  mv repositories/$repo/$fileToCheckOut workingDir/$repo
 
   #displaying message if move of directory worked
-  if [[ -f "workingDir/$repo/$fileTo"  ]]; then
+  if [[ -f "workingDir/$repo/$fileToCheckOut"  ]]; then
     echo 'File checked out succesfully!'
   else
-    echo "Error in checking out file '$fileTo'"
+    echo "Error in checking out file '$fileToCheckOut'"
   fi
 
 }
-
-checkIn
