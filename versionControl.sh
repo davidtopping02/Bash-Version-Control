@@ -1,5 +1,32 @@
 #! /bin/bash
 
+function menuPrompt
+{
+	echo '0. Exit'
+	echo '1. Create new repository'
+	echo '2. Check file into respository'
+	echo $'3. Check file out\n'
+	read -p "Please enter your choice: " userChoice
+
+	case $userChoice in
+		1 ) echo "Creating new repository..."
+		    ;;
+		2 ) echo "Checking file into to the repository..."
+        checkIn
+				;;
+		3 ) echo "Checking out file for editing..."
+        checkOut
+				;;
+		0 ) echo ""
+		echo "Thank you for using the program."
+		echo ""
+		;;
+		* ) echo "That is not a valid choice. Please try again."
+		menuPrompt
+		;;
+	esac
+}
+
 checkIn(){
 
   #displaying all available respositories
@@ -112,3 +139,5 @@ checkOut(){
   fi
 
 }
+
+menuPrompt
