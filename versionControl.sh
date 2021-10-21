@@ -76,6 +76,28 @@ checkIn(){
   #moving file back to the repository
   mv workingDir/$repo/$fileToCheckIn repositories/$repo
 
+	#adding log entry
+	dt=$(date '+%d/%m/%Y %H:%M:%S')
+	echo "'$fileToCheckIn' checked into repository '$repo' on '$dt'" >> repositories/$repo/$repo.log
+
+	#checking if the user wants to add their own log entry
+	echo $'\nWould you like to add your own log entry?'
+	echo 'y/n'
+	read -p 'Option: ' userChoice
+
+	case $userChoice in
+		y )	echo $'\nEnter your log entry'
+				read -p "Entry: " logEntry
+				dt=$(date '+%d/%m/%Y %H:%M:%S')
+				echo "USER LOG: $logEntry on $dt" >> repositories/$repo/$repo.log
+				;;
+		n ) menuPrompt
+				;;
+		* ) echo 'That is not a valid choice.'
+				menuPrompt
+				;;
+		esac
+
   #deleting folder if its the last file being checked in
   if [ -z "$(ls -A workingDir/$repo)" ]; then
     rm -r workingDir/$repo
@@ -132,9 +154,36 @@ checkOut(){
 
   #moving file to be checked out to working directory
   if [[ ! -d workingDir/$repo ]]; then
+
+			#checking out file
       mkdir workingDir/$repo
+
   fi
+
+	#moving file to be checked out to the working directory
   mv repositories/$repo/$fileToCheckOut workingDir/$repo
+
+	#adding log entry
+	dt=$(date '+%d/%m/%Y %H:%M:%S')
+	echo "'$fileToCheckOut' checked out to repository '$repo' on '$dt'" >> repositories/$repo/$repo.log
+
+	#checking if the user wants to add their own log entry
+	echo $'\nWould you like to add your own log entry?'
+	echo 'y/n'
+	read -p 'Option: ' userChoice
+
+	case $userChoice in
+		y )	echo $'\nEnter your log entry'
+				read -p "Entry: " logEntry
+				dt=$(date '+%d/%m/%Y %H:%M:%S')
+				echo "USER LOG: $logEntry on $dt" >> repositories/$repo/$repo.log
+				;;
+		n ) menuPrompt
+				;;
+		* ) echo 'That is not a valid choice.'
+				menuPrompt
+				;;
+		esac
 
   #displaying message if move of directory worked
   if [[ -f "workingDir/$repo/$fileToCheckOut"  ]]; then
