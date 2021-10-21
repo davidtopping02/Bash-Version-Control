@@ -83,6 +83,29 @@ checkIn(){
   #moving file back to the repository
   mv workingDir/$repo/$fileToCheckIn repositories/$repo
 
+	#adding log entry
+	dt=$(date '+%d/%m/%Y %H:%M:%S')
+	echo "'$fileToCheckIn' checked into repository '$repo' on '$dt'" >> repositories/$repo/$repo.log
+
+	#checking if the user wants to add their own log entry
+	echo $'\nWould you like to add your own log entry?'
+	echo 'y/n'
+	read -p 'Option: ' userChoice
+
+	case $userChoice in
+		y )	echo $'\nEnter your log entry'
+				read -p "Entry: " logEntry
+				dt=$(date '+%d/%m/%Y %H:%M:%S')
+				echo "USER LOG: $logEntry on $dt" >> repositories/$repo/$repo.log
+				;;
+		n ) menuPrompt
+				;;
+		* ) echo 'That is not a valid choice.'
+				menuPrompt
+				;;
+		esac
+
+
   #deleting folder if its the last file being checked in
   if [ -z "$(ls -A workingDir/$repo)" ]; then
     rm -r workingDir/$repo
@@ -143,6 +166,28 @@ checkOut(){
   fi
   mv repositories/$repo/$fileToCheckOut workingDir/$repo
 
+	#adding log entry
+	dt=$(date '+%d/%m/%Y %H:%M:%S')
+	echo "'$fileToCheckOut' checked out on '$dt'" >> repositories/$repo/$repo.log
+
+	#checking if the user wants to add their own log entry
+	echo $'\nWould you like to add your own log entry?'
+	echo 'y/n'
+	read -p 'Option: ' userChoice
+
+	case $userChoice in
+		y )	echo $'\nEnter your log entry'
+				read -p "Entry: " logEntry
+				dt=$(date '+%d/%m/%Y %H:%M:%S')
+				echo "USER LOG: $logEntry on $dt" >> repositories/$repo/$repo.log
+				;;
+		n ) menuPrompt
+				;;
+		* ) echo 'That is not a valid choice.'
+				menuPrompt
+				;;
+		esac
+
   #displaying message if move of directory worked
   if [[ -f "workingDir/$repo/$fileToCheckOut"  ]]; then
     echo 'File checked out succesfully!'
@@ -170,10 +215,32 @@ checkOut(){
 createRepo () {
 
 	#getting user input for the name of the new repo
-	read -p "Name of new repo: " myRepo
+	read -p "Name of new repo: " repo
 
 	#making new directory for new repo
-	mkdir repositories/$myRepo
+	mkdir repositories/$repo
+
+	#adding log entry
+	dt=$(date '+%d/%m/%Y %H:%M:%S')
+	echo "'$repo' created on '$dt'" >> repositories/$repo/$repo.log
+
+	#checking if the user wants to add their own log entry
+	echo $'\nWould you like to add your own log entry?'
+	echo 'y/n'
+	read -p 'Option: ' userChoice
+
+	case $userChoice in
+		y )	echo $'\nEnter your log entry'
+				read -p "Entry: " logEntry
+				dt=$(date '+%d/%m/%Y %H:%M:%S')
+				echo "USER LOG: $logEntry on $dt" >> repositories/$repo/$repo.log
+				;;
+		n ) menuPrompt
+				;;
+		* ) echo 'That is not a valid choice.'
+				menuPrompt
+				;;
+		esac
 }
 
 makeFile (){
@@ -206,6 +273,29 @@ makeFile (){
 	read -p $'\nwhat would you like to call your file?: ' myFile
 
 	touch repositories/$repo/$myFile
+
+	#adding log entry
+	dt=$(date '+%d/%m/%Y %H:%M:%S')
+	echo "'$myFile' added to repository '$repo' on '$dt'" >> repositories/$repo/$repo.log
+
+	#checking if the user wants to add their own log entry
+	echo $'\nWould you like to add your own log entry?'
+	echo 'y/n'
+	read -p 'Option: ' userChoice
+
+	case $userChoice in
+		y )	echo $'\nEnter your log entry'
+				read -p "Entry: " logEntry
+				dt=$(date '+%d/%m/%Y %H:%M:%S')
+				echo "USER LOG: $logEntry on $dt" >> repositories/$repo/$repo.log
+				;;
+		n ) menuPrompt
+				;;
+		* ) echo 'That is not a valid choice.'
+				menuPrompt
+				;;
+		esac
+
 
 	if [[ ! -f "repositories/$repo/$myFile" ]]; then
 		echo $'\nERROR when adding file'
