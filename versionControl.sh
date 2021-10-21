@@ -9,7 +9,9 @@ function menuPrompt
 	echo '2. Add a file to an existing repository'
 	echo '3. Check file into respository'
 	echo '4. Check file out'
-	echo $'5. View all repositories\n'
+	echo '5. View all repositories'  
+        echo $'6. Archive a repository\n'
+
 
 	read -p "Please enter your choice: " userChoice
 
@@ -305,6 +307,63 @@ makeFile (){
 	fi
 }
 
+
+archiveRepo (){
+
+if [[ ! -d repositories/ ]]; then
+                        echo $'\nThere are currently no repositories'
+            menuPrompt
+        fi
+
+        #displaying all available respositories
+  
+        echo $'\nWhat repository would you like to archive?'
+
+#looping till valid repository is enterered
+  until [[ -d "repositories/$repo" ]]; do
+
+    #getting repository name from user
+    read -p $'\nRepo: ' repo
+
+
+#displaying message if the repository entered does not exist
+    if [[ ! -d "repositories/$repo"  ]]; then
+      echo 'repository does not exist'
+    fi
+done
+        echo $'\nRespositories available:'
+        ls repositories
+
+
+  #getting user option of repository
+  repo="repoName"
+
+  #looping till valid repository is enterered
+  until [[ -d "repositories/$repo" ]]; do
+
+    #getting repository name from user
+    read -p $'\nRepo: ' repo
+
+    #displaying message if the repository entered does not exist
+    if [[ ! -d "repositories/$repo"  ]]; then
+      echo 'repository does not exist'
+    fi
+done
+
+  #getting archive name from user
+  read -p $'\nArchive Name: ' archive
+
+
+        #archive the newly created one
+        tar -czf archives/$archive.tar.gz repositories/$repo/.
+
+if [[ ! -e "archives/$archive.tar.gz" ]]; then
+                echo $'\nERROR when archiving repository'
+        fi
+        if [[ -e "archives/$archive.tar.gz" ]]; then
+                echo 'Repository archived succesfully'
+        fi
+}
 
 #looping the menu till exit
 while [[ $exit != 1 ]]; do
