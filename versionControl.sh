@@ -164,3 +164,30 @@ checkOut(){
 while [[ $exit != 1 ]]; do
 	menuPrompt exit
 done
+
+function createRepo {
+
+
+read -p "what would you like to call your repository?" myRepo
+#edit path here if you want to add it to "repositories/"
+mkdir $myRepo
+
+}
+
+
+function makeFile {
+
+#if you are adding a file while outside the repo use the following
+echo "which repo would you like to add your file to?"
+read tempDir
+
+echo "what would you like to call your file?"
+read myFile
+
+touch $tempDir/$myFile
+
+#alternatively if you are already in the repo you would use the following
+#read -p "What would you like to call your file" myFile
+#touch myFile
+}
+
