@@ -6,16 +6,23 @@ function menuPrompt
 {
 	echo $'\n0. Exit'
 	echo '1. Create new repository'
-	echo '2. Check file into respository'
-	echo $'3. Check file out\n'
+	echo '2. Add a file to an existing repository'
+	echo '3. Check file into respository'
+	echo '4. Check file out'
+	echo $'5. View all repositories\n'
+
 	read -p "Please enter your choice: " userChoice
 
 	case $userChoice in
-		1 ) echo
+		1 ) createRepo
 		    ;;
-		2 ) checkIn
+		2 )	makeFile
 				;;
-		3 ) checkOut
+		3 ) checkIn
+				;;
+		4 ) checkOut
+				;;
+		5 ) ls repositories
 				;;
 		0 )
 				exit=1
@@ -160,34 +167,56 @@ checkOut(){
 
 }
 
+createRepo () {
+
+	#getting user input for the name of the new repo
+	read -p "Name of new repo: " myRepo
+
+	#making new directory for new repo
+	mkdir repositories/$myRepo
+}
+
+makeFile (){
+
+	if [[ ! -d repositories/ ]]; then
+			echo $'\nThere are currently no repositories'
+	    menuPrompt
+	fi
+
+	#displaying all available respositories
+  echo $'\nRespositories available:'
+  ls repositories
+
+  #getting user option of repository
+  repo="repoName"
+
+  #looping till valid repository is enterered
+  until [[ -d "repositories/$repo" ]]; do
+
+    #getting repository name from user
+    read -p $'\nRepo: ' repo
+
+    #displaying message if the repository entered does not exist
+    if [[ ! -d "repositories/$repo"  ]]; then
+      echo 'repository does not exist'
+    fi
+  done
+
+	#name file
+	read -p $'\nwhat would you like to call your file?: ' myFile
+
+	touch repositories/$repo/$myFile
+
+	if [[ ! -f "repositories/$repo/$myFile" ]]; then
+		echo $'\nERROR when adding file'
+	fi
+	if [[ -f "repositories/$repo/$myFile" ]]; then
+		echo 'File added succesfully'
+	fi
+}
+
+
 #looping the menu till exit
 while [[ $exit != 1 ]]; do
 	menuPrompt exit
 done
-
-function createRepo {
-
-
-read -p "what would you like to call your repository?" myRepo
-#edit path here if you want to add it to "repositories/"
-mkdir $myRepo
-
-}
-
-
-function makeFile {
-
-#if you are adding a file while outside the repo use the following
-echo "which repo would you like to add your file to?"
-read tempDir
-
-echo "what would you like to call your file?"
-read myFile
-
-touch $tempDir/$myFile
-
-#alternatively if you are already in the repo you would use the following
-#read -p "What would you like to call your file" myFile
-#touch myFile
-}
-
