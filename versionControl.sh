@@ -6,23 +6,16 @@ function menuPrompt
 {
 	echo $'\n0. Exit'
 	echo '1. Create new repository'
-	echo '2. Add a file to an existing repository'
-	echo '3. Check file into respository'
-	echo '4. Check file out'
-	echo $'5. View all repositories\n'
-
+	echo '2. Check file into respository'
+	echo $'3. Check file out\n'
 	read -p "Please enter your choice: " userChoice
 
 	case $userChoice in
-		1 ) createRepo
+		1 ) echo
 		    ;;
-		2 )	makeFile
+		2 ) checkIn
 				;;
-		3 ) checkIn
-				;;
-		4 ) checkOut
-				;;
-		5 ) ls repositories
+		3 ) checkOut
 				;;
 		0 )
 				exit=1
@@ -83,6 +76,28 @@ checkIn(){
   #moving file back to the repository
   mv workingDir/$repo/$fileToCheckIn repositories/$repo
 
+	#adding log entry
+	dt=$(date '+%d/%m/%Y %H:%M:%S')
+	echo "'$fileToCheckIn' checked into repository '$repo' on '$dt'" >> repositories/$repo/$repo.log
+
+	#checking if the user wants to add their own log entry
+	echo $'\nWould you like to add your own log entry?'
+	echo 'y/n'
+	read -p 'Option: ' userChoice
+
+	case $userChoice in
+		y )	echo $'\nEnter your log entry'
+				read -p "Entry: " logEntry
+				dt=$(date '+%d/%m/%Y %H:%M:%S')
+				echo "USER LOG: $logEntry on $dt" >> repositories/$repo/$repo.log
+				;;
+		n ) menuPrompt
+				;;
+		* ) echo 'That is not a valid choice.'
+				menuPrompt
+				;;
+		esac
+
   #deleting folder if its the last file being checked in
   if [ -z "$(ls -A workingDir/$repo)" ]; then
     rm -r workingDir/$repo
@@ -139,9 +154,36 @@ checkOut(){
 
   #moving file to be checked out to working directory
   if [[ ! -d workingDir/$repo ]]; then
+
+			#checking out file
       mkdir workingDir/$repo
+
   fi
+
+	#moving file to be checked out to the working directory
   mv repositories/$repo/$fileToCheckOut workingDir/$repo
+
+	#adding log entry
+	dt=$(date '+%d/%m/%Y %H:%M:%S')
+	echo "'$fileToCheckOut' checked out to repository '$repo' on '$dt'" >> repositories/$repo/$repo.log
+
+	#checking if the user wants to add their own log entry
+	echo $'\nWould you like to add your own log entry?'
+	echo 'y/n'
+	read -p 'Option: ' userChoice
+
+	case $userChoice in
+		y )	echo $'\nEnter your log entry'
+				read -p "Entry: " logEntry
+				dt=$(date '+%d/%m/%Y %H:%M:%S')
+				echo "USER LOG: $logEntry on $dt" >> repositories/$repo/$repo.log
+				;;
+		n ) menuPrompt
+				;;
+		* ) echo 'That is not a valid choice.'
+				menuPrompt
+				;;
+		esac
 
   #displaying message if move of directory worked
   if [[ -f "workingDir/$repo/$fileToCheckOut"  ]]; then
@@ -166,55 +208,6 @@ checkOut(){
   fi
 
 }
-
-createRepo () {
-
-	#getting user input for the name of the new repo
-	read -p "Name of new repo: " myRepo
-
-	#making new directory for new repo
-	mkdir repositories/$myRepo
-}
-
-makeFile (){
-
-	if [[ ! -d repositories/ ]]; then
-			echo $'\nThere are currently no repositories'
-	    menuPrompt
-	fi
-
-	#displaying all available respositories
-  echo $'\nRespositories available:'
-  ls repositories
-
-  #getting user option of repository
-  repo="repoName"
-
-  #looping till valid repository is enterered
-  until [[ -d "repositories/$repo" ]]; do
-
-    #getting repository name from user
-    read -p $'\nRepo: ' repo
-
-    #displaying message if the repository entered does not exist
-    if [[ ! -d "repositories/$repo"  ]]; then
-      echo 'repository does not exist'
-    fi
-  done
-
-	#name file
-	read -p $'\nwhat would you like to call your file?: ' myFile
-
-	touch repositories/$repo/$myFile
-
-	if [[ ! -f "repositories/$repo/$myFile" ]]; then
-		echo $'\nERROR when adding file'
-	fi
-	if [[ -f "repositories/$repo/$myFile" ]]; then
-		echo 'File added succesfully'
-	fi
-}
-
 
 #looping the menu till exit
 while [[ $exit != 1 ]]; do
