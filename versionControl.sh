@@ -350,19 +350,69 @@ done
     fi
 done
 
-  #getting archive name from user
-  read -p $'\nArchive Name: ' archive
+        #archive the repository
+	tar -czf archives/$repo.tar.gz repositories/$repo/.
 
-
-        #archive the newly created one
-        tar -czf archives/$archive.tar.gz repositories/$repo/.
-
-if [[ ! -e "archives/$archive.tar.gz" ]]; then
+if [[ ! -e "archives/$repo.tar.gz" ]]; then
                 echo $'\nERROR when archiving repository'
         fi
-        if [[ -e "archives/$archive.tar.gz" ]]; then
+        if [[ -e "archives/$repo.tar.gz" ]]; then
                 echo 'Repository archived succesfully'
         fi
+}
+unarchiveRepo (){
+
+if [[ ! -e archives/ ]]; then
+                        echo $'\nThere are currently no archived repositories'
+            menuPrompt
+        fi
+
+        #displaying all available respositories
+  
+        echo $'\nWhat repository would you like to unarchive?'
+
+        echo $'\n Archives:'
+
+ls archives
+
+#getting user option of repository
+repo="repoName"
+
+path="pathName"
+
+  #looping till valid file is enterered
+  until [[ -e "archives/$path" ]]; do
+
+    #getting repository name from user
+    read -p $'\nRepo: ' repo
+
+    #path to archived repo
+    path="$repo.tar.gz"
+
+    #displaying message if the repository entered does not exist
+    if [[ ! -e "archives/$path"  ]]; then
+      echo 'archive not found'
+    fi
+done
+
+#unarchive the file
+tar xvzf archives/$path
+
+#copy contents over
+cp -r archives/repositories/$repo/. repositories/$repo/ >/dev/null 2>&1
+
+#remove archived file
+rm -r archives/$path
+
+
+# checking if repository was unarchived successfully
+if [[ ! -d "repositories/$repo" ]]; then
+                echo $'\nERROR when unarchiving repository'
+        fi
+if [[ -d "repositories/$repo"  ]]; then
+      echo 'Repository unarchived successfully!'
+    fi
+
 }
 
 #looping the menu till exit
