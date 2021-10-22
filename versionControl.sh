@@ -10,7 +10,8 @@ function menuPrompt
 	echo '3. Check file into respository'
 	echo '4. Check file out'
 	echo '5. View all repositories'  
-        echo $'6. Archive a repository\n'
+        echo '6. Archive a repository'
+        echo $'7. Unarchive a repository \n'
 
 
 	read -p "Please enter your choice: " userChoice
@@ -26,6 +27,11 @@ function menuPrompt
 				;;
 		5 ) ls repositories
 				;;
+		6 ) archiveRepo
+                                ;;
+                7 ) unarchiveRepo 
+                                ;;
+
 		0 )
 				exit=1
 				echo $'\nThank you for using the program.\n'
