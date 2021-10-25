@@ -10,8 +10,8 @@ function menuPrompt
 	echo '3. Check file into respository'
 	echo '4. Check file out'
 	echo '5. View all repositories'
-        echo '6. Archive a repository'
-        echo $'7. Unarchive a repository \n'
+  echo '6. Archive a repository'
+  echo $'7. Unarchive a repository \n'
 
 
 	read -p "Please enter your choice: " userChoice
@@ -28,9 +28,9 @@ function menuPrompt
 		5 ) ls repositories
 				;;
 		6 ) archiveRepo
-                                ;;
-                7 ) unarchiveRepo
-                                ;;
+      	;;
+    7 ) unarchiveRepo
+        ;;
 
 		0 )
 				exit=1
@@ -315,29 +315,28 @@ makeFile (){
 
 
 archiveRepo (){
-
+	#displaying error if there are no repositories
 	if [[ ! -d repositories/ ]]; then
 		echo $'\nThere are currently no repositories'
     menuPrompt
   fi
 
-  #displaying all available respositories
-	echo $'\nWhat repository would you like to archive?'
-
-	#looping till valid repository is enterered
-  until [[ -d "repositories/$repo" ]]; do
-
-	  #getting repository name from user
-	  read -p $'\nRepo: ' repo
-
-		#displaying message if the repository entered does not exist
-	  if [[ ! -d "repositories/$repo"  ]]; then
-	    echo 'repository does not exist'
-	  fi
-
-	done
-
-	echo $'\nRespositories available:'
+  # #displaying all available respositories
+	# echo $'\nWhat repository would you like to archive?'
+	#
+	# #looping till valid repository is enterered
+  # until [[ -d "repositories/$repo" ]]; do
+	#
+	#   #getting repository name from user
+	#   read -p $'\nRepo: ' repo
+	#
+	# 	#displaying message if the repository entered does not exist
+	#   if [[ ! -d "repositories/$repo"  ]]; then
+	#     echo 'repository does not exist'
+	#   fi
+	# done
+	#
+	echo $'\nRespositories available to archive:'
   ls repositories
 
   #getting user option of repository
@@ -375,9 +374,8 @@ unarchiveRepo (){
   fi
 
   #displaying all available respositories
-  echo $'\nWhat repository would you like to unarchive?'
-  echo $'\n Archives:'
-	ls archives
+	echo $'\nRespositories available to un-archive:'
+  ls archives
 
 	#getting user option of repository
 	repo="repoName"
@@ -407,11 +405,10 @@ unarchiveRepo (){
 
 	# checking if repository was unarchived successfully
 	if [[ ! -d "repositories/$repo" ]]; then
-	                echo $'\nERROR when unarchiving repository'
-	        fi
-	if [[ -d "repositories/$repo"  ]]; then
-	      echo 'Repository unarchived successfully!'
-	    fi
+		echo $'\nERROR when unarchiving repository'
+	else
+		echo 'Repository unarchived successfully!'
+	fi
 	}
 
 #looping the menu till exit
