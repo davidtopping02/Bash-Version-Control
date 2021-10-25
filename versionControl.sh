@@ -9,9 +9,10 @@ function menuPrompt
 	echo '2. Add a file to an existing repository'
 	echo '3. Check file into respository'
 	echo '4. Check file out'
-	echo '5. View all repositories'
-  echo '6. Archive a repository'
-  echo $'7. Unarchive a repository \n'
+	echo '5. View all active repositories'
+	echo '6. View all archived repositories'
+  echo '7. Archive a repository'
+  echo $'8. Unarchive a repository \n'
 
 
 	read -p "Please enter your choice: " userChoice
@@ -25,13 +26,16 @@ function menuPrompt
 				;;
 		4 ) checkOut
 				;;
-		5 ) ls repositories
+		5 ) echo $'\nActive repositories:'
+				ls repositories
 				;;
-		6 ) archiveRepo
+		6 ) echo $'\nArchived repositories:'
+				ls archives | sed -n 's/\.tar.gz$//p'
+				;;
+		7 ) archiveRepo
       	;;
-    7 ) unarchiveRepo
+    8 ) unarchiveRepo
         ;;
-
 		0 )
 				exit=1
 				echo $'\nThank you for using the program.\n'
