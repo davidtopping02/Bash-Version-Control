@@ -321,21 +321,6 @@ archiveRepo (){
     menuPrompt
   fi
 
-  # #displaying all available respositories
-	# echo $'\nWhat repository would you like to archive?'
-	#
-	# #looping till valid repository is enterered
-  # until [[ -d "repositories/$repo" ]]; do
-	#
-	#   #getting repository name from user
-	#   read -p $'\nRepo: ' repo
-	#
-	# 	#displaying message if the repository entered does not exist
-	#   if [[ ! -d "repositories/$repo"  ]]; then
-	#     echo 'repository does not exist'
-	#   fi
-	# done
-	#
 	echo $'\nRespositories available to archive:'
   ls repositories
 
@@ -357,6 +342,9 @@ archiveRepo (){
   #archive the repository
 	tar -czf archives/$repo.tar.gz repositories/$repo/.
 
+	#removing repository from the repo folder
+	rm -r repositories/$repo
+
 	if [[ ! -e "archives/$repo.tar.gz" ]]; then
   	echo $'\nERROR when archiving repository'
   fi
@@ -375,7 +363,7 @@ unarchiveRepo (){
 
   #displaying all available respositories
 	echo $'\nRespositories available to un-archive:'
-  ls archives
+	ls archives | sed -n 's/\.tar.gz$//p'
 
 	#getting user option of repository
 	repo="repoName"
