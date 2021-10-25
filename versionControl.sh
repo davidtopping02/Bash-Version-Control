@@ -9,7 +9,7 @@ function menuPrompt
 	echo '2. Add a file to an existing repository'
 	echo '3. Check file into respository'
 	echo '4. Check file out'
-	echo '5. View all repositories'  
+	echo '5. View all repositories'
         echo '6. Archive a repository'
         echo $'7. Unarchive a repository \n'
 
@@ -29,7 +29,7 @@ function menuPrompt
 				;;
 		6 ) archiveRepo
                                 ;;
-                7 ) unarchiveRepo 
+                7 ) unarchiveRepo
                                 ;;
 
 		0 )
@@ -317,12 +317,12 @@ makeFile (){
 archiveRepo (){
 
 if [[ ! -d repositories/ ]]; then
-                        echo $'\nThere are currently no repositories'
+echo $'\nThere are currently no repositories'
             menuPrompt
         fi
 
         #displaying all available respositories
-  
+
         echo $'\nWhat repository would you like to archive?'
 
 #looping till valid repository is enterered
@@ -368,30 +368,24 @@ if [[ ! -e "archives/$repo.tar.gz" ]]; then
 }
 unarchiveRepo (){
 
-if [[ ! -e archives/ ]]; then
-                        echo $'\nThere are currently no archived repositories'
-            menuPrompt
-        fi
+	if [[ ! -e archives/ ]]; then
+		echo $'\nThere are currently no archived repositories'
+    menuPrompt
+  fi
 
-        #displaying all available respositories
-  
-        echo $'\nWhat repository would you like to unarchive?'
+  #displaying all available respositories
+  echo $'\nWhat repository would you like to unarchive?'
+  echo $'\n Archives:'
+	ls archives
 
-        echo $'\n Archives:'
-
-ls archives
-
-#getting user option of repository
-repo="repoName"
-
-path="pathName"
+	#getting user option of repository
+	repo="repoName"
+	path="pathName"
 
   #looping till valid file is enterered
   until [[ -e "archives/$path" ]]; do
-
     #getting repository name from user
     read -p $'\nRepo: ' repo
-
     #path to archived repo
     path="$repo.tar.gz"
 
@@ -399,27 +393,25 @@ path="pathName"
     if [[ ! -e "archives/$path"  ]]; then
       echo 'archive not found'
     fi
-done
+	done
 
-#unarchive the file
-tar xvzf archives/$path
+	#unarchive the file
+	tar xvzf archives/$path
 
-#copy contents over
-cp -r archives/repositories/$repo/. repositories/$repo/ >/dev/null 2>&1
+	#copy contents over
+	cp -r archives/repositories/$repo/. repositories/$repo/ >/dev/null 2>&1
 
-#remove archived file
-rm -r archives/$path
+	#remove archived file
+	rm -r archives/$path
 
-
-# checking if repository was unarchived successfully
-if [[ ! -d "repositories/$repo" ]]; then
-                echo $'\nERROR when unarchiving repository'
-        fi
-if [[ -d "repositories/$repo"  ]]; then
-      echo 'Repository unarchived successfully!'
-    fi
-
-}
+	# checking if repository was unarchived successfully
+	if [[ ! -d "repositories/$repo" ]]; then
+	                echo $'\nERROR when unarchiving repository'
+	        fi
+	if [[ -d "repositories/$repo"  ]]; then
+	      echo 'Repository unarchived successfully!'
+	    fi
+	}
 
 #looping the menu till exit
 while [[ $exit != 1 ]]; do
