@@ -4,14 +4,16 @@ export exit=0
 
 function menuPrompt
 {
-	echo $'\n0. Exit'
-	echo '1. Create new repository'
-	echo '2. Add a file to an existing repository'
-	echo '3. Check file into respository'
-	echo '4. Check file out'
-	echo '5. View all repositories'
-  echo '6. Archive a repository'
-  echo $'7. Unarchive a repository \n'
+	 echo $'\n*******************************************'
+        echo '0. Exit'
+        echo '1. Create new repository'
+        echo '2. Add a file to an existing repository'
+        echo '3. Check file into respository'
+        echo '4. Check file out'
+        echo '5. View all repositories'
+        echo '6. Archive a repository'
+        echo '7. Unarchive a repository'
+        echo $'\n*******************************************'
 
 
 	read -p "Please enter your choice: " userChoice
