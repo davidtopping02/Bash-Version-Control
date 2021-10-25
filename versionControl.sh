@@ -316,30 +316,29 @@ makeFile (){
 
 archiveRepo (){
 
-if [[ ! -d repositories/ ]]; then
-echo $'\nThere are currently no repositories'
-            menuPrompt
-        fi
+	if [[ ! -d repositories/ ]]; then
+		echo $'\nThere are currently no repositories'
+    menuPrompt
+  fi
 
-        #displaying all available respositories
+  #displaying all available respositories
+	echo $'\nWhat repository would you like to archive?'
 
-        echo $'\nWhat repository would you like to archive?'
-
-#looping till valid repository is enterered
+	#looping till valid repository is enterered
   until [[ -d "repositories/$repo" ]]; do
 
-    #getting repository name from user
-    read -p $'\nRepo: ' repo
+	  #getting repository name from user
+	  read -p $'\nRepo: ' repo
 
+		#displaying message if the repository entered does not exist
+	  if [[ ! -d "repositories/$repo"  ]]; then
+	    echo 'repository does not exist'
+	  fi
 
-#displaying message if the repository entered does not exist
-    if [[ ! -d "repositories/$repo"  ]]; then
-      echo 'repository does not exist'
-    fi
-done
-        echo $'\nRespositories available:'
-        ls repositories
+	done
 
+	echo $'\nRespositories available:'
+  ls repositories
 
   #getting user option of repository
   repo="repoName"
@@ -354,18 +353,20 @@ done
     if [[ ! -d "repositories/$repo"  ]]; then
       echo 'repository does not exist'
     fi
-done
+	done
 
-        #archive the repository
+  #archive the repository
 	tar -czf archives/$repo.tar.gz repositories/$repo/.
 
-if [[ ! -e "archives/$repo.tar.gz" ]]; then
-                echo $'\nERROR when archiving repository'
-        fi
-        if [[ -e "archives/$repo.tar.gz" ]]; then
-                echo 'Repository archived succesfully'
-        fi
+	if [[ ! -e "archives/$repo.tar.gz" ]]; then
+  	echo $'\nERROR when archiving repository'
+  fi
+
+	if [[ -e "archives/$repo.tar.gz" ]]; then
+    echo 'Repository archived succesfully'
+  fi
 }
+
 unarchiveRepo (){
 
 	if [[ ! -e archives/ ]]; then
