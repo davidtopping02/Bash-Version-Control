@@ -4,15 +4,16 @@ export exit=0
 
 function menuPrompt
 {
-	echo $'\n0. Exit'
-	echo '1. Create new repository'
+	echo $'\n1. Create new repository'
 	echo '2. Add a file to an existing repository'
-	echo '3. Check file into respository'
+	echo '3. Check file into repository'
 	echo '4. Check file out'
 	echo '5. View all active repositories'
 	echo '6. View all archived repositories'
-  echo '7. Archive a repository'
-  echo $'8. Unarchive a repository \n'
+  	echo '7. Archive a repository'
+  	echo '8. Unarchive a repository'
+	echo '9. Backup or restore a file'
+	echo $'0. Exit\n'
 
 
 	read -p "Please enter your choice: " userChoice
@@ -20,8 +21,8 @@ function menuPrompt
 	case $userChoice in
 		1 ) createRepo
 		    ;;
-		2 )	makeFile
-				;;
+		2 ) makeFile
+		    ;;
 		3 ) checkIn
 				;;
 		4 ) checkOut
@@ -33,9 +34,11 @@ function menuPrompt
 				ls archives | sed -n 's/\.tar.gz$//p'
 				;;
 		7 ) archiveRepo
-      	;;
-    8 ) unarchiveRepo
-        ;;
+      				;;
+		8 ) unarchiveRepo
+        			;;
+		9 ) backupOptionsMenu
+		    ;;
 		0 )
 				exit=1
 				echo $'\nThank you for using the program.\n'
@@ -54,14 +57,14 @@ checkIn(){
 		menuPrompt
 	fi
 
-  #displaying all available respositories
+  #displaying all available repositories
   echo $'\nWhich repository would you like to check a file into:'
   ls workingDir
 
   #getting user option of repository
   repo="repoName"
 
-  #looping till valid repository is enterered
+  #looping till valid repository is entered
   until [[ -d "workingDir/$repo" ]]; do
 
     #getting repository name from user
@@ -80,7 +83,7 @@ checkIn(){
   #init file to check in variable
   fileToCheckIn="fileToCheckIn"
 
-  #looping till valid file is enterered
+  #looping till valid file is entered
   until [[ -f "workingDir/$repo/$fileToCheckIn" ]]; do
 
     #getting user option of file to be checked in
@@ -125,7 +128,7 @@ checkIn(){
 
   #displaying message if move of directory worked
   if [[ -f "repositories/$repo/$fileToCheckIn"  ]]; then
-    echo 'File checked in succesfully!'
+    echo 'File checked in successfully!'
   else
     echo "Error in checking in file '$fileToCheckIn'"
   fi
@@ -136,18 +139,18 @@ checkIn(){
 checkOut(){
 
 	if [ -z "$(ls -A repositories)" ]; then
-		echo $'There are currently no active respositories...'
+		echo $'There are currently no active repositories...'
 		return 1
 	fi
 
-  #displaying all available respositories
-  echo $'\nRespositories available:'
+  #displaying all available repositories
+  echo $'\nRepositories available:'
   ls repositories
 
   #getting user option of repository
   repo="repoName"
 
-  #looping till valid repository is enterered
+  #looping till valid repository is entered
   until [[ -d "repositories/$repo" ]]; do
 
     #getting repository name from user
@@ -165,7 +168,7 @@ checkOut(){
   echo $'\nfiles available to check out'
   ls repositories/$repo
 
-  #looping till valid file is enterered
+  #looping till valid file is entered
   until [[ -f "repositories/$repo/$fileToCheckOut" ]]; do
 
     #getting user option of file to be
@@ -207,7 +210,7 @@ checkOut(){
 
   #displaying message if move of directory worked
   if [[ -f "workingDir/$repo/$fileToCheckOut"  ]]; then
-    echo 'File checked out succesfully!'
+    echo 'File checked out successfully!'
 
 		echo $'\nWould you like to open your file in a text editor?'
 		echo 'y/n'
@@ -267,14 +270,14 @@ makeFile (){
 	    menuPrompt
 	fi
 
-	#displaying all available respositories
-  echo $'\nRespositories available:'
+	#displaying all available repositories
+  echo $'\nRepositories available:'
   ls repositories
 
   #getting user option of repository
   repo="repoName"
 
-  #looping till valid repository is enterered
+  #looping till valid repository is entered
   until [[ -d "repositories/$repo" ]]; do
 
     #getting repository name from user
@@ -318,7 +321,7 @@ makeFile (){
 		echo $'\nERROR when adding file'
 	fi
 	if [[ -f "repositories/$repo/$myFile" ]]; then
-		echo 'File added succesfully'
+		echo 'File added successfully'
 	fi
 }
 
@@ -330,13 +333,13 @@ archiveRepo (){
     return 1
   fi
 
-	echo $'\nRespositories available to archive:'
+	echo $'\nRepositories available to archive:'
   ls repositories
 
   #getting user option of repository
   repo="repoName"
 
-  #looping till valid repository is enterered
+  #looping till valid repository is entered
   until [[ -d "repositories/$repo" ]]; do
 
     #getting repository name from user
@@ -359,7 +362,7 @@ archiveRepo (){
   fi
 
 	if [[ -e "archives/$repo.tar.gz" ]]; then
-    echo 'Repository archived succesfully'
+    echo 'Repository archived successfully'
   fi
 }
 
@@ -370,15 +373,15 @@ unarchiveRepo (){
     return 1
   fi
 
-  #displaying all available respositories
-	echo $'\nRespositories available to un-archive:'
+  #displaying all available repositories
+	echo $'\nRepositories available to un-archive:'
 	ls archives | sed -n 's/\.tar.gz$//p'
 
 	#getting user option of repository
 	repo="repoName"
 	path="pathName"
 
-  #looping till valid file is enterered
+  #looping till valid file is entered
   until [[ -e "archives/$path" ]]; do
     #getting repository name from user
     read -p $'\nRepo: ' repo
@@ -407,6 +410,29 @@ unarchiveRepo (){
 		echo 'Repository unarchived successfully!'
 	fi
 	}
+
+function backupOptionsMenu
+{
+	echo $'\nBackup Options'
+
+	echo $'\n1. Back up a file'
+	echo '2. Restore a file from backup'
+	echo $'0. Back to main menu\n'
+
+	read -p "Please enter your choice: " userChoice
+
+	case $userChoice in
+		1 ) echo "Backing up file..."
+		    ;;
+		2 ) echo "Restoring file..."
+		    ;;
+		0 ) menuPrompt
+		    ;;
+		* ) echo 'That is not a valid choice. Please try again.'
+		backupOptionsMenu
+		;;
+	esac	
+}
 
 #main sequence of script start up
 
