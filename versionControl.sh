@@ -24,9 +24,9 @@ function menuPrompt
 		2 ) makeFile
 		    ;;
 		3 ) checkIn
-				;;
+		    ;;
 		4 ) checkOut
-				;;
+		    ;;
 		5 ) echo $'\nActive repositories:'
 				ls repositories
 				;;
@@ -34,9 +34,9 @@ function menuPrompt
 				ls archives | sed -n 's/\.tar.gz$//p'
 				;;
 		7 ) archiveRepo
-      				;;
+      		    ;;
 		8 ) unarchiveRepo
-        			;;
+        	    ;;
 		9 ) backupOptionsMenu
 		    ;;
 		0 )
@@ -422,9 +422,9 @@ function backupOptionsMenu
 	read -p "Please enter your choice: " userChoice
 
 	case $userChoice in
-		1 ) echo "Backing up file..."
+		1 ) backup
 		    ;;
-		2 ) echo "Restoring file..."
+		2 ) restore
 		    ;;
 		0 ) menuPrompt
 		    ;;
@@ -432,6 +432,78 @@ function backupOptionsMenu
 		backupOptionsMenu
 		;;
 	esac	
+}
+
+function backup
+{
+	if [[ ! -d "backups" ]];
+	then
+		mkdir backups
+	fi
+
+	if [ -z "$(ls workingDir)" ];
+	then
+		echo $'There are currently no checked-out files to back up.'
+		menuPrompt
+	fi
+
+	echo $'\nAvailable repositories:'
+  	ls repositories
+
+  	echo $'\nPlease enter the name of a repository to check for files to be backed up:'
+
+  	repository="repositoryName"
+
+  	until [[ -d "repositories/$repository" ]];
+	do
+    		read -p $'\nRepo: ' repository
+
+    		if [[ ! -d "repositories/$repository"  ]];
+		then
+    			echo 'That repository does not exist.'
+   		fi
+  	done
+
+	if [ -z "$(ls repositories/$repository)" ];
+	then
+		echo "There are no files in this repository."
+		menuPrompt
+	fi
+
+	echo $'\nFiles available for backing up: '
+  	ls repositories/$repository
+
+  	fileToBackUp="fileToBackUp"
+
+  	until [[ -f "repositories/$repository/$fileToBackUp" ]];
+	do
+		read -p $'\nPlease enter the name of the file to be backed up: ' fileToBackUp
+
+	    	if [[ ! -f "repositories/$repository/$fileToBackUp"  ]];
+		then
+      			echo 'That file does not exist.'
+    		fi
+  	done
+	
+	cp repositories/$repository/$fileToBackUp repositories/$repository/backUpFile
+	mv repositories/$repository/backUpFile backups
+	echo "File backed up successfully!"
+
+}
+
+function restore
+{
+	if [[ ! -d "backups" ]];
+	then
+		echo "There are no backed up files to restore."
+		menuPrompt
+	fi
+
+	if [ -z "$(ls backups)" ];
+	then
+		echo "There are no backed up files to restore."
+		menuPrompt
+	fi
 }
 
 #main sequence of script start up
