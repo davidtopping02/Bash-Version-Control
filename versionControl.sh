@@ -135,6 +135,11 @@ checkIn(){
 
 checkOut(){
 
+	if [ -z "$(ls -A repositories)" ]; then
+		echo $'There are currently no active respositories...'
+		return 1
+	fi
+
   #displaying all available respositories
   echo $'\nRespositories available:'
   ls repositories
@@ -322,7 +327,7 @@ archiveRepo (){
 	#displaying error if there are no repositories
 	if [[ ! -d repositories/ ]]; then
 		echo $'\nThere are currently no repositories'
-    menuPrompt
+    return 1
   fi
 
 	echo $'\nRespositories available to archive:'
@@ -362,7 +367,7 @@ unarchiveRepo (){
 
 	if [[ ! -e archives/ ]]; then
 		echo $'\nThere are currently no archived repositories'
-    menuPrompt
+    return 1
   fi
 
   #displaying all available respositories
@@ -402,6 +407,21 @@ unarchiveRepo (){
 		echo 'Repository unarchived successfully!'
 	fi
 	}
+
+#main sequence of script start up
+
+#making program folders required for functioning
+if [[ ! -d "repositories" ]]; then
+	mkdir repositories
+fi
+
+if [[ ! -d "workingDir" ]]; then
+	mkdir workingDir
+fi
+
+if [[ ! -d "archives" ]]; then
+	mkdir archives
+fi
 
 #looping the menu till exit
 while [[ $exit != 1 ]]; do
