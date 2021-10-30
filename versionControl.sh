@@ -411,6 +411,7 @@ unarchiveRepo (){
 	fi
 	}
 
+#function which provides the menu options to back up or restore a file
 function backupOptionsMenu
 {
 	echo $'\nBackup Options'
@@ -434,124 +435,147 @@ function backupOptionsMenu
 	esac	
 }
 
+#function to back up a file USE IF/ELIF/ELSE TO SORT PROGRAM ORDERING ISSUES
 function backup
 {
+	#makes a 'backup' directory if one does not already exist
 	if [[ ! -d "backups" ]];
 	then
 		mkdir backups
-	fi
 
-	if [ -z "$(ls repositories)" ];
+	#checks to see if there are any active repositories
+	elif [ -z "$(ls repositories)" ];
 	then
 		echo "There are currently no active repositories in which to check for files to back up."
 		menuPrompt
-	fi
-
-	if [ -z "$(ls workingDir)" ];
-	then
-		echo "There are currently no checked-out files to back up."
-		menuPrompt
-	fi
-
-	echo $'\nAvailable repositories:'
-  	ls repositories
-
-  	echo $'\nPlease enter the name of a repository to check for files to be backed up:'
-
-  	repository="repositoryName"
-
-  	until [[ -d "repositories/$repository" ]];
-	do
-    		read -p $'\nRepo: ' repository
-
-    		if [[ ! -d "repositories/$repository"  ]];
-		then
-    			echo 'That repository does not exist.'
-   		fi
-  	done
-
-	if [ -z "$(ls repositories/$repository)" ];
-	then
-		echo "There are no files in this repository."
-		menuPrompt
-	fi
-
-	echo $'\nFiles available for backing up: '
-  	ls repositories/$repository
-
-  	fileToBackUp="fileToBackUp"
-
-  	until [[ -f "repositories/$repository/$fileToBackUp" ]];
-	do
-		read -p $'\nPlease enter the name of the file to be backed up: ' fileToBackUp
-
-	    	if [[ ! -f "repositories/$repository/$fileToBackUp"  ]];
-		then
-      			echo 'That file does not exist, please try again.'
-    		fi
-  	done
-
-	backupTime=$(date '+%d.%m.%Y at %H.%M.%S')
-
-	backupName="$fileToBackUp as on $backupTime"
-	#echo $backupName    for debugging purposes
 	
-	cp repositories/$repository/$fileToBackUp repositories/$repository/"$backupName"
-	mv repositories/$repository/"$backupName" backups
-	echo "File backed up successfully!"
+	else
+		#lists all available repositories
+		echo $'\nAvailable repositories:'
+  		ls repositories
+
+		#asks user to enter the name of a repository
+  		echo $'\nPlease enter the name of a repository to check for files to be backed up:'
+	
+  		repository="repositoryName"
+	
+		#ensures an existing repository name is entered
+  		until [[ -d "repositories/$repository" ]];
+		do
+    			read -p $'\nRepo: ' repository
+
+    			if [[ ! -d "repositories/$repository"  ]];
+			then
+    				echo 'That repository does not exist.'
+   			fi
+  		done
+
+		#checks to see if there are any files in the chosen repository
+		if [ -z "$(ls repositories/$repository)" ];
+		then
+			echo "There are no files in this repository."
+			menuPrompt
+		
+		else
+			#lists all available files
+			echo $'\nFiles available for backing up: '
+  			ls repositories/$repository
+
+  			fileToBackUp="fileToBackUp"
+
+			#asks the user to enter the name of a file, and loops until an existing file name is entered
+  			until [[ -f "repositories/$repository/$fileToBackUp" ]];
+			do
+				read -p $'\nPlease enter the name of the file to be backed up: ' fileToBackUp
+
+		  	  	if [[ ! -f "repositories/$repository/$fileToBackUp"  ]];
+				then
+      					echo 'That file does not exist, please try again.'
+    				fi
+  			done
+
+			#fetches the current date and time
+			backupTime=$(date '+%d.%m.%Y at %H.%M.%S')
+	
+			#appends the date and time onto the end of the file name
+			backupName="$fileToBackUp as on $backupTime"
+
+			#makes a copy of the chosen file, then moves the copy into the backups directory	
+			cp repositories/$repository/$fileToBackUp repositories/$repository/"$backupName"
+			mv repositories/$repository/"$backupName" backups
+			echo "File backed up successfully!"
+		fi
+	fi
 
 }
 
+#function to restore a file from backup  USE IF/ELIF/ELSE TO SORT PROGRAM ORDER ISSUES
 function restore
 {
+	#checks to see if there is a backups directory
 	if [[ ! -d "backups" ]];
 	then
 		echo "There are no backed up files to restore."
 		menuPrompt
-	fi
 
-	if [ -z "$(ls backups)" ];
+	#checks to see if there are any files in the backups directory
+	elif [ -z "$(ls backups)" ];
 	then
 		echo "There are no backed up files to restore."
 		menuPrompt
-	fi
 
-	echo "Files available to restore:"
-	ls backups
-
+	#checks to see if there are any active repositories to restore the file to
+	elif [ -z "$(ls repositories)" ];
+	then
+		echo "There are currently no active repositories to which to restore the file."
+		menuPrompt
 	
-	until [[ -f "backups/$fileToRestore" ]];
-	do
-		read -p $'\nPlease enter the name of the file to be restored: ' fileToRestore
+	else
 
-	    	if [[ ! -f "backups/$fileToRestore"  ]];
-		then
-      			echo 'That file does not exist, please try again.'
-    		fi
-  	done
+		#lists all available files
+		echo "Files available to restore:"
+		ls backups
 
-	fileName=$( echo "$fileToRestore" | cut -d " " -f 1 )
+		#asks the user to enter the name of the file to be restored, and loops until an existing file name is entered
+		until [[ -f "backups/$fileToRestore" ]];
+		do
+			read -p $'\nPlease enter the name of the file to be restored: ' fileToRestore
 
-	echo $'\nAvailable repositories:'
-  	ls repositories
+		    	if [[ ! -f "backups/$fileToRestore"  ]];
+			then
+      				echo 'That file does not exist, please try again.'
+    			fi
+  		done
 
-  	echo $'\nPlease enter the name of the repository to which the file is to be restored:'
+		#removes the date and time from the file name
+		fileName=$( echo "$fileToRestore" | cut -d " " -f 1 )
 
-  	repository="repositoryName"
 
-  	until [[ -d "repositories/$repository" ]];
-	do
-    		read -p $'\nRepo: ' repository
+		#lists all available repositories
+		echo $'\nAvailable repositories:'
+  		ls repositories
 
-    		if [[ ! -d "repositories/$repository"  ]];
-		then
-    			echo 'That repository does not exist.'
-   		fi
-  	done
+		#asks the user to enter the name of the repository to move the file into
+  		echo $'\nPlease enter the name of the repository to which the file is to be restored:'
 
-	cp backups/"$fileToRestore" backups/"$fileName"
-	mv backups/"$fileName" repositories/$repository
-	echo "File restored successfully!"
+  		repository="repositoryName"
+	
+		#ensures that an existing repository name is entered
+  		until [[ -d "repositories/$repository" ]];
+		do
+    			read -p $'\nRepo: ' repository
+
+    			if [[ ! -d "repositories/$repository"  ]];
+			then
+    				echo 'That repository does not exist.'
+   			fi
+  		done
+	
+		#makes a copy of the backed up file, then moves it to the chosen repository
+		cp backups/"$fileToRestore" backups/"$fileName"
+		mv backups/"$fileName" repositories/$repository
+		echo "File restored successfully!"
+	fi
 }
 
 #main sequence of script start up
