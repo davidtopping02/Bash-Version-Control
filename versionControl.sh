@@ -547,7 +547,7 @@ function restore
    		fi
   	done
 
-	mv "$fileToRestore" repositories/$repository
+	mv backups/"$fileToRestore" repositories/$repository
 	echo "File restored successfully!"
 }
 
