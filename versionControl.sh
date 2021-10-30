@@ -487,7 +487,7 @@ function backup
 
 	    	if [[ ! -f "repositories/$repository/$fileToBackUp"  ]];
 		then
-      			echo 'That file does not exist.'
+      			echo 'That file does not exist, please try again.'
     		fi
   	done
 
@@ -504,19 +504,51 @@ function backup
 
 function restore
 {
-	#if [[ ! -d "backups" ]];
-	#then
-	#	echo "There are no backed up files to restore."
-	#	menuPrompt
-	#fi
+	if [[ ! -d "backups" ]];
+	then
+		echo "There are no backed up files to restore."
+		menuPrompt
+	fi
 
-	#if [ -z "$(ls backups)" ];
-	#then
-	#	echo "There are no backed up files to restore."
-	#	menuPrompt
-	#fi
+	if [ -z "$(ls backups)" ];
+	then
+		echo "There are no backed up files to restore."
+		menuPrompt
+	fi
 
-	echo "This function is not yet implemented."
+	echo "Files available to restore:"
+	ls backups
+
+	
+	until [[ -f "backups/$fileToRestore" ]];
+	do
+		read -p $'\nPlease enter the name of the file to be restored: ' fileToRestore
+
+	    	if [[ ! -f "backups/$fileToRestore"  ]];
+		then
+      			echo 'That file does not exist, please try again.'
+    		fi
+  	done
+
+	echo $'\nAvailable repositories:'
+  	ls repositories
+
+  	echo $'\nPlease enter the name of the repository to which the file is to be restored:'
+
+  	repository="repositoryName"
+
+  	until [[ -d "repositories/$repository" ]];
+	do
+    		read -p $'\nRepo: ' repository
+
+    		if [[ ! -d "repositories/$repository"  ]];
+		then
+    			echo 'That repository does not exist.'
+   		fi
+  	done
+
+	mv "$fileToRestore" repositories/$repository
+	echo "File restored successfully!"
 }
 
 #main sequence of script start up
