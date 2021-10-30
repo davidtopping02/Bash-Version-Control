@@ -530,6 +530,8 @@ function restore
     		fi
   	done
 
+	fileName=$( echo "$fileToRestore" | cut -d " " -f 1 )
+
 	echo $'\nAvailable repositories:'
   	ls repositories
 
@@ -547,7 +549,8 @@ function restore
    		fi
   	done
 
-	mv backups/"$fileToRestore" repositories/$repository
+	cp backups/"$fileToRestore" backups/"$fileName"
+	mv backups/"$fileName" repositories/$repository
 	echo "File restored successfully!"
 }
 
