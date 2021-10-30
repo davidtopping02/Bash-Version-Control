@@ -435,7 +435,7 @@ function backupOptionsMenu
 	esac	
 }
 
-#function to back up a file USE IF/ELIF/ELSE TO SORT PROGRAM ORDERING ISSUES
+#function to back up a file
 function backup
 {
 	#makes a 'backup' directory if one does not already exist
@@ -509,7 +509,7 @@ function backup
 
 }
 
-#function to restore a file from backup  USE IF/ELIF/ELSE TO SORT PROGRAM ORDER ISSUES
+#function to restore a file from backup
 function restore
 {
 	#checks to see if there is a backups directory
