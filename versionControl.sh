@@ -441,9 +441,15 @@ function backup
 		mkdir backups
 	fi
 
+	if [ -z "$(ls repositories)" ];
+	then
+		echo "There are currently no active repositories in which to check for files to back up."
+		menuPrompt
+	fi
+
 	if [ -z "$(ls workingDir)" ];
 	then
-		echo $'There are currently no checked-out files to back up.'
+		echo "There are currently no checked-out files to back up."
 		menuPrompt
 	fi
 
@@ -484,26 +490,33 @@ function backup
       			echo 'That file does not exist.'
     		fi
   	done
+
+	backupTime=$(date '+%d.%m.%Y at %H.%M.%S')
+
+	backupName="$fileToBackUp as on $backupTime"
+	#echo $backupName    for debugging purposes
 	
-	cp repositories/$repository/$fileToBackUp repositories/$repository/backUpFile
-	mv repositories/$repository/backUpFile backups
+	cp repositories/$repository/$fileToBackUp repositories/$repository/"$backupName"
+	mv repositories/$repository/"$backupName" backups
 	echo "File backed up successfully!"
 
 }
 
 function restore
 {
-	if [[ ! -d "backups" ]];
-	then
-		echo "There are no backed up files to restore."
-		menuPrompt
-	fi
+	#if [[ ! -d "backups" ]];
+	#then
+	#	echo "There are no backed up files to restore."
+	#	menuPrompt
+	#fi
 
-	if [ -z "$(ls backups)" ];
-	then
-		echo "There are no backed up files to restore."
-		menuPrompt
-	fi
+	#if [ -z "$(ls backups)" ];
+	#then
+	#	echo "There are no backed up files to restore."
+	#	menuPrompt
+	#fi
+
+	echo "This function is not yet implemented."
 }
 
 #main sequence of script start up
