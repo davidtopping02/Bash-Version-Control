@@ -527,7 +527,7 @@ function restore
 	#checks to see if there are any active repositories to restore the file to
 	elif [ -z "$(ls repositories)" ];
 	then
-		echo "There are currently no active repositories to which to restore the file."
+		echo "There are currently no active repositories to which to restore a file."
 		menuPrompt
 	
 	else
