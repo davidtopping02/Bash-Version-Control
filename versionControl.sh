@@ -10,8 +10,8 @@ function menuPrompt
 	echo '4. Check file out'
 	echo '5. View all active repositories'
 	echo '6. View all archived repositories'
-  	echo '7. Archive a repository'
-  	echo '8. Unarchive a repository'
+  echo '7. Archive a repository'
+  echo '8. Unarchive a repository'
 	echo $'0. Exit\n'
 
 
@@ -33,9 +33,9 @@ function menuPrompt
 				ls archives | sed -n 's/\.tar.gz$//p'
 				;;
 		7 ) archiveRepo
-      				;;
+      	;;
 		8 ) unarchiveRepo
-        			;;
+        ;;
 		0 )
 				exit=1
 				echo $'\nThank you for using the program.\n'
