@@ -10,8 +10,8 @@ function menuPrompt
 	echo '4. Check file out'
 	echo '5. View all active repositories'
 	echo '6. View all archived repositories'
-  echo '7. Archive a repository'
-  echo '8. Unarchive a repository'
+	echo '7. Archive a repository'
+	echo '8. Unarchive a repository'
 	echo '9. Backup or restore a file'
 	echo $'0. Exit\n'
 
