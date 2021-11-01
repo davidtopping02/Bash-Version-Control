@@ -10,8 +10,8 @@ function menuPrompt
 	echo '4. Check file out'
 	echo '5. View all active repositories'
 	echo '6. View all archived repositories'
-  	echo '7. Archive a repository'
-  	echo '8. Unarchive a repository'
+  echo '7. Archive a repository'
+  echo '8. Unarchive a repository'
 	echo '9. Backup or restore a file'
 	echo $'0. Exit\n'
 
@@ -34,9 +34,9 @@ function menuPrompt
 				ls archives | sed -n 's/\.tar.gz$//p'
 				;;
 		7 ) archiveRepo
-      		    ;;
+      	;;
 		8 ) unarchiveRepo
-        	    ;;
+        ;;
 		9 ) backupOptionsMenu
 		    ;;
 		0 )
@@ -432,7 +432,7 @@ function backupOptionsMenu
 		* ) echo 'That is not a valid choice. Please try again.'
 		backupOptionsMenu
 		;;
-	esac	
+	esac
 }
 
 #function to back up a file
@@ -448,7 +448,7 @@ function backup
 	then
 		echo "There are currently no active repositories in which to check for files to back up."
 		menuPrompt
-	
+
 	else
 		#lists all available repositories
 		echo $'\nAvailable repositories:'
@@ -456,9 +456,9 @@ function backup
 
 		#asks user to enter the name of a repository
   		echo $'\nPlease enter the name of a repository to check for files to be backed up:'
-	
+
   		repository="repositoryName"
-	
+
 		#ensures an existing repository name is entered
   		until [[ -d "repositories/$repository" ]];
 		do
@@ -475,7 +475,7 @@ function backup
 		then
 			echo "There are no files in this repository."
 			menuPrompt
-		
+
 		else
 			#lists all available files
 			echo $'\nFiles available for backing up: '
@@ -496,11 +496,11 @@ function backup
 
 			#fetches the current date and time
 			backupTime=$(date '+%d.%m.%Y at %H.%M.%S')
-	
+
 			#appends the date and time onto the end of the file name
 			backupName="$fileToBackUp as on $backupTime"
 
-			#makes a copy of the chosen file, then moves the copy into the backups directory	
+			#makes a copy of the chosen file, then moves the copy into the backups directory
 			cp repositories/$repository/$fileToBackUp repositories/$repository/"$backupName"
 			mv repositories/$repository/"$backupName" backups
 			echo "File backed up successfully!"
@@ -529,7 +529,7 @@ function restore
 	then
 		echo "There are currently no active repositories to which to restore a file."
 		menuPrompt
-	
+
 	else
 
 		#lists all available files
@@ -559,7 +559,7 @@ function restore
   		echo $'\nPlease enter the name of the repository to which the file is to be restored:'
 
   		repository="repositoryName"
-	
+
 		#ensures that an existing repository name is entered
   		until [[ -d "repositories/$repository" ]];
 		do
@@ -570,7 +570,7 @@ function restore
     				echo 'That repository does not exist.'
    			fi
   		done
-	
+
 		#makes a copy of the backed up file, then moves it to the chosen repository
 		cp backups/"$fileToRestore" backups/"$fileName"
 		mv backups/"$fileName" repositories/$repository
